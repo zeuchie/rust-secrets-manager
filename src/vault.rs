@@ -1,7 +1,19 @@
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Vault {
-    secrets: HashMap<String, (String, String)>,
+    secrets: HashMap<Website, Secret>,
+}
+
+#[derive(Debug, Clone, Hash, Eq, PartialEq, Serialize, Deserialize)]
+#[repr(transparent)]
+pub struct Website(pub String);
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Secret {
+    username: String,
+    password: String,
 }
 
 impl Vault {
@@ -11,53 +23,59 @@ impl Vault {
         }
     }
 
-    pub fn add_to_vault(&mut self, website: String, username: String, password: String) {
+    pub fn add_to_vault(&mut self, website: Website, secret: Secret) {
         if !self.secrets.contains_key(&website) {
-            println!("The secret for {} has been added.", &website);
-            self.secrets.insert(website, (username, password));
+            println!("The secret for {} has been added.", &website.0);
+            self.secrets.insert(website, secret);
         } else {
             println!(
-                "There is already a secret for {website} in the vault. To edit the secret for {website}, use update."
+                "There is already a secret for {w} in the vault. To edit the secret for {w}, use update.",
+                w = website.0,
             )
         }
     }
 
-    pub fn remove_from_vault(&mut self, website: &String) {
+    pub fn remove_from_vault(&mut self, website: &Website) {
         if self.secrets.contains_key(website) {
-            println!("The secret for {} has been removed.", website);
+            println!("The secret for {} has been removed.", website.0);
             self.secrets.remove(website);
         } else {
             println!(
-                "There is no secret for {website} in the vault. To view all websites with a secret, use list."
+                "There is no secret for {} in the vault. To view all websites with a secret, use list.",
+                website.0
             )
         }
     }
 
-    pub fn update_secret(&mut self, website: String, username: String, password: String) {
+    pub fn update_secret(&mut self, website: Website, secret: Secret) {
         if self.secrets.contains_key(&website) {
-            println!("The secret for {} has been updated.", &website);
-            self.secrets.insert(website, (username, password));
+            println!("The secret for {} has been updated.", &website.0);
+            self.secrets.insert(website, secret);
         } else {
             println!(
-                "There is no secret for {website} in the vault. To create a new secret for {website}, use add."
+                "There is no secret for {w} in the vault. To create a new secret for {w}, use add.",
+                w = website.0
             )
         }
     }
 
-    pub fn get_secret(&mut self, website: &String) {
-        if self.secrets.contains_key(website) {
-            println!("The username for {website} is {} and the password has been copied to clipboard.", self.secrets.get(website).unwrap().0);
+    pub fn get_secret(&mut self, website: &Website) {
+        if self.secrets.contains_key(&website) {
+            println!(
+                "The username for {} is {} and the password has been copied to clipboard.",
+                website.0, self.secrets.get(website).unwrap().username
+            );
             // TODO: copy password to clipboard
         } else {
             println!(
-                "There is no secret for {website} in the vault. To create a new secret for {website}, use add."
+                "There is no secret for {w} in the vault. To create a new secret for {w}, use add.", w = website.0
             )
         }
     }
 
     pub fn list_websites_with_secret(&self) {
         for website in self.secrets.keys() {
-            println!("{website}");
+            println!("{}", website.0);
         }
     }
 }
