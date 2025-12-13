@@ -414,7 +414,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rust-secrets-manager"
+name = "rsm"
 version = "0.1.0"
 dependencies = [
  "aes-gcm",
