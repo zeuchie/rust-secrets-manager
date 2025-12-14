@@ -11,7 +11,7 @@ pub struct CLI {
 pub enum Commands {
     /// Initialize a new vault
     Init,
-    /// Add a new secret to the vault
+    /// Add a secret to the vault
     Add(AddArgs),
     /// Delete a secret from the vault
     Delete(DeleteArgs),
@@ -19,15 +19,15 @@ pub enum Commands {
     Update(UpdateArgs),
     /// Get a secret from the vault
     Get(GetArgs),
-    // See all websites with a secret in the vault
-    List(ListArgs),
+    /// See all websites with a secret in the vault
+    List,
 }
 
 #[derive(Debug, Args)]
 pub struct AddArgs {
     pub website: String,
-    pub name: String,
-    password: String,
+    pub username: String,
+    pub password: String,
 }
 
 #[derive(Debug, Args)]
@@ -38,16 +38,11 @@ pub struct DeleteArgs {
 #[derive(Debug, Args)]
 pub struct UpdateArgs{
     pub website: String,
-    pub name: String,
-    password: String,
+    pub username: String,
+    pub password: String,
 }
 
 #[derive(Debug, Args)]
 pub struct GetArgs {
-    pub website: String,
-}
-
-#[derive(Debug, Args)]
-pub struct ListArgs {
     pub website: String,
 }

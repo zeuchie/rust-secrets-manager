@@ -12,8 +12,8 @@ pub struct Website(pub String);
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Secret {
-    username: String,
-    password: String,
+    pub username: String,
+    pub password: String,
 }
 
 impl Vault {

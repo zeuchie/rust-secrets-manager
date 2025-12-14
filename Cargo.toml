@@ -7,10 +7,10 @@ edition = "2024"
 # CLI argument parsing
 clap = { version = "4", features = ["derive"] }
 
-# Error handling
-thiserror = "2.0.17"
+# Easy idiomatic error handling
+anyhow = { version = "1.0" }
 
-# Serialization (plaintext phase, later encryption)
+# Serialization
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 
