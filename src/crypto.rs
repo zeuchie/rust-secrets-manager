@@ -1,4 +1,4 @@
-// Credit to FAANG article:
+// Credit to medium article by FAANG:
 // https://medium.com/@FAANG/building-a-command-line-file-encryption-tool-in-rust-a-step-by-step-guide-996120069604
 
 use aes_gcm::aead::{Aead, KeyInit};

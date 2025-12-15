@@ -7,6 +7,9 @@ edition = "2024"
 # CLI argument parsing
 clap = { version = "4", features = ["derive"] }
 
+# Library to get/set contents of OS clipboard
+cli-clipboard = "0.4"
+
 # Error handling
 anyhow = { version = "1.0" }
 

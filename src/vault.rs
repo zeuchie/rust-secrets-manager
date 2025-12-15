@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use cli_clipboard;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Vault {
@@ -65,7 +66,8 @@ impl Vault {
                 "The username for {} is {} and the password has been copied to clipboard.",
                 website.0, self.secrets.get(website).unwrap().username
             );
-            // TODO: copy password to clipboard
+            // Copy password to OS clipboard
+            cli_clipboard::set_contents(self.secrets.get(website).unwrap().password.to_owned()).unwrap();   
         } else {
             println!(
                 "There is no secret for {w} in the vault. To create a new secret for {w}, use add.", w = website.0
