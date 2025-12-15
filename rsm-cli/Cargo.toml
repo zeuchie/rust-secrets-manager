@@ -1,0 +1,24 @@
+[package]
+name = "rsm"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rsm-core ={ path = "../rsm-core" }
+
+# CLI argument parsing
+clap = { version = "4", features = ["derive"] }
+
+# Library to get/set contents of OS clipboard
+cli-clipboard = "0.4"
+
+# Error handling
+anyhow = { version = "1.0" }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Encryption
+aes-gcm = "0.10"
+rand = "0.9.2"
