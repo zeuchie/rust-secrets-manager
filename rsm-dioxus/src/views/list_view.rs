@@ -38,30 +38,39 @@ pub fn ListView(mut status: Signal<String>) -> Element {
                                 {
                                     let site_str = website.0.clone();
                                     let mut show = use_signal(|| false);
+                                    let mut confirm_delete = use_signal(|| false);
                                     rsx!( 
                                         div { key: "{site_str}", class: "bg-slate-800 rounded-lg p-6 border border-slate-700",
                                         div { class: "flex items-start justify-between mb-4",
                                             div { h3 { class: "text-white text-lg mb-1", "{site_str}" } p { class: "text-slate-400 text-sm", "{secret.username}" } }
-                                            button { onclick: move |_| {
-                                                let site = vault::Website(site_str.clone());
-                                                match storage::load_vault_from_file() {
-                                                    Ok(mut v) => {
-                                                        v.remove_from_vault(&site);
-                                                        match storage::load_vault_key() {
-                                                            Ok(key) => {
-                                                                if let Err(e) = storage::save_vault_to_file(&v, key) {
-                                                                    status.set(format!("Failed to save vault: {}", e));
-                                                                    return;
+                                            { if confirm_delete() {
+                                                rsx!( div { class: "flex items-center gap-2",
+                                                    button { onclick: move |_| {
+                                                            let site = vault::Website(site_str.clone());
+                                                            match storage::load_vault_from_file() {
+                                                                Ok(mut v) => {
+                                                                    v.remove_from_vault(&site);
+                                                                    match storage::load_vault_key() {
+                                                                        Ok(key) => {
+                                                                            if let Err(e) = storage::save_vault_to_file(&v, key) {
+                                                                                status.set(format!("Failed to save vault: {}", e));
+                                                                                return;
+                                                                            }
+                                                                            vault.set(v);
+                                                                        }
+                                                                        Err(e) => { status.set(format!("Failed to load vault key: {}", e)); return; }
+                                                                    }
                                                                 }
-                                                                vault.set(v);
+                                                                Err(_) => { status.set("Vault not initialized. Please initialize vault first.".to_string()); return; }
                                                             }
-                                                            Err(e) => { status.set(format!("Failed to load vault key: {}", e)); return; }
-                                                        }
-                                                    }
-                                                    Err(_) => { status.set("Vault not initialized. Please initialize vault first.".to_string()); return; }
-                                                }
-                                                status.set(format!("Secret for {} deleted", site.0));
-                                            }, class: "text-red-400 hover:text-red-300 p-2 hover:bg-slate-700 rounded transition-colors", Trash2 {color: "red", size: 18,}, }
+                                                            status.set(format!("Secret for {} deleted", site.0));
+                                                            confirm_delete.set(false);
+                                                        }, class: "text-red-400 hover:text-red-300 p-2 hover:bg-slate-700 rounded transition-colors", "Confirm" }
+                                                    button { onclick: move |_| { confirm_delete.set(false); }, class: "text-slate-400 p-2 hover:bg-slate-700 rounded", "Cancel" }
+                                                })
+                                            } else {
+                                                rsx!( button { onclick: move |_| { confirm_delete.set(true); }, class: "text-red-400 hover:text-red-300 p-2 hover:bg-slate-700 rounded transition-colors", Trash2 {color: "red", size: 18,}, } )
+                                            } }
                                         }
 
                                         div { class: "grid grid-cols-2 gap-4",
@@ -69,7 +78,13 @@ pub fn ListView(mut status: Signal<String>) -> Element {
                                                 label { class: "text-slate-400 text-sm block mb-2", "Username" }
                                                 div { class: "flex items-center gap-2",
                                                     input { r#type: "text", value: "{secret.username}", readonly: true, class: "flex-1 bg-slate-700 text-white px-3 py-2 rounded border border-slate-600" }
-                                                    button { onclick: move |_| status.set("Username copied (demo)".to_string()), class: "p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded transition-colors", Copy {color: "white", size: 18,}, }
+                                                    button { onclick: move |_| {
+                                                        let u = secret.username.clone();
+                                                        if !u.is_empty() {
+                                                            let _ = cli_clipboard::set_contents(u);
+                                                            status.set("Username copied to clipboard".to_string());
+                                                        }
+                                                    }, class: "p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded transition-colors", Copy {color: "white", size: 18,}, }
                                                 }
                                             }
                                             div {
@@ -83,7 +98,13 @@ pub fn ListView(mut status: Signal<String>) -> Element {
                                                             rsx!( EyeOff {color: "white", size: 18,} )
                                                         } }
                                                     }
-                                                    button { onclick: move |_| status.set("Password copied (demo)".to_string()), class: "p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded transition-colors", Copy {color: "white", size: 18,}, }
+                                                    button { onclick: move |_| {
+                                                        let p = secret.password.clone();
+                                                        if !p.is_empty() {
+                                                            let _ = cli_clipboard::set_contents(p);
+                                                            status.set("Password copied to clipboard".to_string());
+                                                        }
+                                                    }, class: "p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded transition-colors", Copy {color: "white", size: 18,}, }
                                                 }
                                             }
                                         }

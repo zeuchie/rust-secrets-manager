@@ -14,8 +14,8 @@ pub fn InitView(status: Signal<String>) -> Element {
                     div { h3 { class: "text-white mb-3", "Vault Configuration" }
                         div { class: "space-y-3",
                             div { class: "flex items-center justify-between p-3 bg-slate-700/50 rounded", span { class: "text-slate-400", "Vault Location" } code { class: "text-blue-400", "~/vault.rsm" } }
-                            div { class: "flex items-center justify-between p-3 bg-slate-700/50 rounded", span { class: "text-slate-400", "Encryption Key" } code { class: "text-blue-400", "~/.ssh/rsm-key" } }
-                            div { class: "flex items-center justify-between p-3 bg-slate-700/50 rounded", span { class: "text-slate-400", "Encryption" } code { class: "text-green-400", "AES-256" } }
+                            div { class: "flex items-center justify-between p-3 bg-slate-700/50 rounded", span { class: "text-slate-400", "Encryption Key Location" } code { class: "text-blue-400", "~/.ssh/rsm-key" } }
+                            div { class: "flex items-center justify-between p-3 bg-slate-700/50 rounded", span { class: "text-slate-400", "Encryption Method" } code { class: "text-green-400", "AES-256" } }
                         }
                     }
 

@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use lucide_dioxus::{ Lock, List, Plus, Search, SquarePen, Trash2, Check, X, Key };
+use lucide_dioxus::{ Lock, List, Plus, Search, SquarePen, Trash2, Key };
 use crate::views::{ListView, AddView, GetView, UpdateView, DeleteView, InitView};
 
 #[derive(Clone, PartialEq)]
@@ -15,7 +15,7 @@ enum View {
 #[component]
 pub fn VaultGUI() -> Element {
     let mut active_view = use_signal(|| View::List);
-    let status_message = use_signal(|| String::new());
+    let mut status_message = use_signal(|| String::new());
 
     rsx! {
         // Sidebar
@@ -28,7 +28,7 @@ pub fn VaultGUI() -> Element {
                         }
                         div {
                             h1 { class: "text-white", "RSM" }
-                            p { class: "text-slate-400 text-sm", "Rust Secrets Manager" }
+                            p { class: "text-slate-400 text-sm", "Secrets Manager" }
                         }
                     }
                 }
@@ -85,21 +85,17 @@ pub fn VaultGUI() -> Element {
             // Main
             div { class: "flex-1 flex flex-col bg-slate-900",
                 { if !status_message().is_empty() {
-                    if status_message().contains("No secret found") {
-                        rsx!(
-                            div { class: "bg-red-600 text-white px-6 py-3 flex items-center gap-2",
-                                X {color: "white", size: 18,},
-                                span { "{status_message}" }
+                    rsx!(
+                        div { class: "bg-blue-600 text-white px-6 py-3 flex items-center gap-2",
+                            span { class: "flex-1", "{status_message}" }
+                            button {
+                                onclick: move |_| status_message.set(String::new()),
+                                class: "ml-auto text-slate-200 hover:text-white bg-transparent p-1 rounded",
+                                aria_label: "Dismiss",
+                                "Dismiss"
                             }
-                        )
-                    } else {
-                        rsx!(
-                            div { class: "bg-green-600 text-white px-6 py-3 flex items-center gap-2",
-                                Check {color: "white", size: 18,},
-                                span { "{status_message}" }
-                            }
-                        )
-                    }
+                        }
+                    )
                 } else {
                     rsx!()
                 } }

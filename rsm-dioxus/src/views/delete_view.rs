@@ -34,7 +34,7 @@ pub fn DeleteView(mut status: Signal<String>) -> Element {
                     website.set(String::new());
                 }, class: "bg-slate-800 rounded-lg p-6 border border-slate-700",
                     div { class: "space-y-4",
-                        div { label { class: "text-white block mb-2", "Website" } input { r#type: "text", value: "{website}", oninput: move |e| website.set(e.value()), placeholder: "https://www.example.com", class: "w-full bg-slate-700 text-white px-4 py-3 rounded border border-slate-600" } }
+                        div { label { class: "text-white block mb-2", "Website" } input { r#type: "text", value: "{website}", oninput: move |e| website.set(e.value()), placeholder: "https://www.example.com", class: "w-full bg-slate-700 text-white px-4 py-3 rounded border border-slate-600", autocorrect: "off", autocapitalize: "off", spellcheck: "false", autocomplete: "off" } }
                         div { class: "bg-red-900/20 border border-red-800/50 rounded p-4", p { class: "text-red-400 text-sm", "Note: This action cannot be undone. The secret will be permanently removed from the vault." } }
                         button { r#type: "submit", class: "w-full bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded transition-colors flex items-center justify-center gap-2", Trash2 {color: "white", size: 18,}, "Delete Secret" }
                     }
