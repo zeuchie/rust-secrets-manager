@@ -9,6 +9,8 @@ edition = "2021"
 [dependencies]
 dioxus = { version = "0.7.1", features = [] }
 lucide-dioxus = { version = "2.561.0", features = ["all-icons"] }
+rsm-core = { path = "../rsm-core" }
+cli-clipboard = "0.4"
 
 [features]
 default = ["desktop"]

@@ -4176,8 +4176,10 @@ dependencies = [
 name = "rsm-dioxus"
 version = "0.1.0"
 dependencies = [
+ "cli-clipboard",
  "dioxus",
  "lucide-dioxus",
+ "rsm-core",
 ]
 
 [[package]]

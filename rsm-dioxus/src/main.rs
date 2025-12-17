@@ -1,3 +1,4 @@
+mod views;
 mod vault_gui;
 
 use dioxus::prelude::*;

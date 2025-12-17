@@ -3,14 +3,14 @@ use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Vault {
-    secrets: HashMap<Website, Secret>,
+    pub secrets: HashMap<Website, Secret>,
 }
 
 #[derive(Debug, Clone, Hash, Eq, PartialEq, Serialize, Deserialize)]
 #[repr(transparent)]
 pub struct Website(pub String);
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Secret {
     pub username: String,
     pub password: String,

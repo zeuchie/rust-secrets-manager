@@ -25,12 +25,28 @@ fn key_path() -> PathBuf {
 
 // Create a new vault and save it to a JSON file
 pub fn new_vault_file() -> anyhow::Result<Vault> {
+    let key_path = key_path();
+    let vault_path = vault_path();
+
+    // If a vault file and key already exist, do not overwrite
+    if key_path.exists() && vault_path.exists() {
+        return Err(anyhow::anyhow!(
+            "Vault and key already exist. Initialization aborted to avoid overwriting existing data."
+        ));
+    }
+    // Create new vault, encrypt with existing key, and save to vault path
+    else if key_path.exists() && !vault_path.exists() {
+        let vault = Vault::new_vault();
+        let key = load_vault_key()?;
+        save_vault_to_file(&vault, key)?;
+        return Ok(vault);
+    }
+
     // Create a new encryption key
     let mut key = [0u8; 32];
     rand::rng().fill(&mut key);
 
     // Save the key to .ssh folder
-    let key_path = key_path();
     let mut key_file = fs::File::create(key_path)?;
     key_file.write_all(&key)?;
 
@@ -55,7 +71,7 @@ pub fn save_vault_to_file(vault: &Vault, key: [u8; 32]) -> anyhow::Result<()> {
 pub fn load_vault_from_file() -> anyhow::Result<Vault> {
     let vault_key = load_vault_key()?;
     let encryptor = Encryptor::new(&vault_key);
-    
+
     let path = vault_path();
     let mut file = fs::File::open(path)?;
     let mut v = vec![];
